@@ -20,7 +20,7 @@ escaped_tweet = {
 
 all_escaped_tweet = {
     "created_at": "Fri Oct 30 18:10:49 +0000 2015",
-    "text": "  \/Hello \\ \' \" n\no   di\tce "
+    "text": "  \/Hello \\\\ \\\' \\\" n\\no   di\\tce "
 }
 
 class TestSanitizer(unittest.TestCase):
@@ -55,7 +55,6 @@ class TestSanitizer(unittest.TestCase):
 
     def test_all_escape_charecters(self):
         tweet = json.dumps(all_escaped_tweet)
-        print tweet
         expected_output = '/Hello \ \' " n o di ce (timestamp: Fri Oct 30 18:10:49 +0000 2015)'
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
