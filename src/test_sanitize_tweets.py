@@ -10,7 +10,7 @@ json_tweet = (
 
 unicode_tweet = {
     "created_at": "Thu Oct 29 18:10:49 +0000 2015",
-    "text": unicode("I'm at Terminal de Integra\u00e7\u00e3o do Varadouro in Jo\u00e3o Pessoa", encoding='utf_8')
+    "text": "I'm at Terminal de Integra\u00e7\u00e3o do Varadouro in Jo\u00e3o Pessoa"
 }
 
 escaped_tweet = {
@@ -35,7 +35,7 @@ class TestSanitizer(unittest.TestCase):
 
     def test_remove_unicode(self):
         tweet = json.dumps(unicode_tweet)
-        expected_output = 'Im at Terminal de Integrao do Varadouro in Joo Pessoa (timestamp: Thu Oct 29 18:10:49 +0000 2015)'
+        expected_output = "I'm at Terminal de Integrao do Varadouro in Joo Pessoa (timestamp: Thu Oct 29 18:10:49 +0000 2015)"
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
 
@@ -49,9 +49,13 @@ class TestSanitizer(unittest.TestCase):
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
 
+        sanitized_output = self.sanitizer.sanitize_tweet(tweet)
+        num_unicode = self.sanitizer.num_tweets_with_unicode()
+        self.assertEqual(num_unicode, 0)
+
     def test_all_escape_charecters(self):
         tweet = json.dumps(all_escaped_tweet)
         print tweet
-        expected_output = '/Hellow \ \' " n o di ce (timestamp: Wed Oct 29 18:10:49 +0000 2015)'
+        expected_output = '/Hello \ \' " n o di ce (timestamp: Fri Oct 30 18:10:49 +0000 2015)'
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
