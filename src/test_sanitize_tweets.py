@@ -8,10 +8,12 @@ json_tweet = (
     '"id_str":"659789759787589632", "text":"Spark Summit East this week! #Spark #Apache"}'
 )
 
-unicode_tweet = {
-    "created_at": "Thu Oct 29 18:10:49 +0000 2015",
-    "text": "I'm at Terminal de Integra\u00e7\u00e3o do Varadouro in Jo\u00e3o Pessoa"
-}
+unicode_json = (
+    '{'
+    '"created_at": "Thu Oct 29 18:10:49 +0000 2015",'
+    '"text": "Im at Terminal de Integra\u00e7\u00e3o do Varadouro in Jo\u00e3o Pessoa"'
+    '}'
+)
 
 escaped_tweet = {
     "created_at": "Thu Oct 30 18:10:49 +0000 2015",
@@ -34,8 +36,8 @@ class TestSanitizer(unittest.TestCase):
         self.assertEqual(expected_output, sanitized_output)
 
     def test_remove_unicode(self):
-        tweet = json.dumps(unicode_tweet)
-        expected_output = "I'm at Terminal de Integrao do Varadouro in Joo Pessoa (timestamp: Thu Oct 29 18:10:49 +0000 2015)"
+        tweet = unicode_json
+        expected_output = "Im at Terminal de Integrao do Varadouro in Joo Pessoa (timestamp: Thu Oct 29 18:10:49 +0000 2015)"
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
 
