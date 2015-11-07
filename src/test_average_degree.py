@@ -1,6 +1,6 @@
 import unittest
 
-from sanitize_tweets import Tweet, TweetSanitizer
+from tweeter import Tweet, TweetSanitizer
 
 
 tweets_series = [

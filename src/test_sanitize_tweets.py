@@ -1,7 +1,8 @@
 import json
 import unittest
 
-from sanitize_tweets import TweetSanitizer
+from tweeter import TweetSanitizer
+
 
 json_tweet = (
     '{"created_at":"Thu Oct 29 17:51:01 +0000 2015", "id":659789759787589632,'
@@ -24,6 +25,7 @@ all_escaped_tweet = {
     "created_at": "Fri Oct 30 18:10:49 +0000 2015",
     "text": "  \/Hello \\\\ \\\' \\\" n\\no   di\\tce "
 }
+
 
 class TestSanitizer(unittest.TestCase):
     def setUp(self):
