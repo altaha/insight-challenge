@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from tweeter import TweetSanitizer
+from tweeter import Tweet, TweetSanitizer
 
 
 json_tweet = (
@@ -27,7 +27,7 @@ all_escaped_tweet = {
 }
 
 
-class TestSanitizer(unittest.TestCase):
+class TestTweetSanitizer(unittest.TestCase):
     def setUp(self):
         self.sanitizer = TweetSanitizer()
 
@@ -62,3 +62,33 @@ class TestSanitizer(unittest.TestCase):
         expected_output = '/Hello \ \' " n o di ce (timestamp: Fri Oct 30 18:10:49 +0000 2015)'
         sanitized_output = str(self.sanitizer.sanitize_tweet(tweet))
         self.assertEqual(expected_output, sanitized_output)
+
+
+class TestTweet(unittest.TestCase):
+    def test_name(self):
+        tweet = Tweet('Hello', '123')
+        expected = 'Hello (timestamp: 123)'
+        self.assertEqual(expected, str(tweet))
+
+    def test_one_edge(self):
+        tweet = Tweet('Hello #Abra #Kadabra', '123')
+        expected_edges = ['#abra-#kadabra']
+        self.assertEqual(expected_edges, tweet.get_edges())
+
+    def test_many_edges(self):
+        tweet = Tweet('Hello #One #two #THREE', '123')
+        expected_edges = ['#one-#two', '#one-#three', '#three-#two']
+        edges = tweet.get_edges()
+        self.assertEqual(len(expected_edges), len(edges))
+        for edge in edges:
+            self.assertIn(edge, expected_edges)
+
+    def test_edges_for_duplicate_hashtags(self):
+        tweet = Tweet('Hello #A #a', '123')
+        expected_edges = []
+        self.assertEqual(expected_edges, tweet.get_edges())
+
+    def test_edges_for_no_hashtags(self):
+        tweet = Tweet('Hello No hash', '123')
+        expected_edges = []
+        self.assertEqual(expected_edges, tweet.get_edges())

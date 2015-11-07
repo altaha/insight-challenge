@@ -55,3 +55,28 @@ class Tweet(object):
             text=self.text,
             created_at=self.created_at,
         )
+
+    def get_edges(self):
+        words = self.text.split()
+        hashtags = set([word.lower() for word in words if word[0] == '#'])
+        edges = []
+        while len(hashtags) > 0:
+            hash1 = hashtags.pop()
+            edges += [self._edge_name(hash1, hash2) for hash2 in hashtags]
+        return edges
+
+    def _edge_name(self, h1, h2):
+        if h1 < h2:
+            return '{}-{}'.format(h1, h2)
+        else:
+            return '{}-{}'.format(h2, h1)
+
+
+class TweetsGraphDegree(object):
+    def __init__(self):
+        self.tweets = []
+        self.num_graph_nodes = 0
+        self.nodes_total = 0
+
+    def average(self):
+        return float(self.nodes_total) / self.num_graph_nodes
