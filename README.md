@@ -12,7 +12,7 @@ This challenge is to implement two features:
 
 Here, we have to define a few concepts (though there will be examples below to clarify):
 
-- A tweet's text is considered "clean" once all of the escape characters (e.g. \n, \", \/ ) and unicode have been removed.
+- A tweet's text is considered "clean" once all of the escape characters (e.g. \n, \", \/ ) are replaced and unicode have been removed.
 - A Twitter hashtag graph is a graph connecting all the hashtags that have been mentioned together in a single tweet.
 
 ## Details of Implementation
@@ -56,7 +56,7 @@ The point of the first feature is to extract and clean the relevant data for the
  "geo":null,"coordinates":null,"place":{"id":"a612c69b44b2e5da","url":"https:\/\/api.twitter.com\/1.1\/geo\/id\/a612c69b44b2e5da.json","place_type":"admin","name":"Arizona","full_name":"Arizona, USA","country_code":"US",
  "country":"United States","bounding_box":{"type":"Polygon","coordinates":[[[-114.818269,31.332246],[-114.818269,37.004261],[-109.045152,37.004261],[-109.045152,31.332246]]]},
  "attributes":{}},"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,
- "entities":{"hashtags":[],"urls":[],"user_mentions":[],"symbols":[]},
+ "entities":{"hashtags":[{"text":"Spark","indices":[29,35]},{"text":"Apache","indices":[36,43]}],"urls":[],"user_mentions":[],"symbols":[]},
  "favorited":false,"retweeted":false,"filter_level":"low","lang":"en","timestamp_ms":"1446141111691"
 }  
 </pre>
@@ -99,7 +99,7 @@ In this case, the tweet's text was already clean, but another example tweet migh
 }
 </pre>
 
-Now, the tweet's text needs to be cleaned by replacing the escape characters and removing the non-ASCII unicode characters to get the result:
+Now, the tweet's text needs to be cleaned by replacing the escape characters with their counterparts (see FAQ below for details) and removing the non-ASCII unicode characters to get the result:
 
 	I'm at Terminal de Integrao do Varadouro in Joo Pessoa, PB https://t.co/HOl34REL1a (timestamp: Thu Oct 29 18:10:49 +0000 2015)
 
@@ -109,7 +109,7 @@ Perhaps it would make more sense to convert the unicode to similar ASCII letters
 
 Your program should output the results of this first feature to a text file named `ft1.txt` in a directory named `tweet_output`, with each new tweet on a newline.  To be clear, if `tweets.txt` originally contained the following tweets:
 ```
-{"created_at":"Thu Oct 29 17:51:01 +0000 2015","id":659789756637822976,"id_str":"659789756637822976","text":"Spark Summit East this week! #Spark #Apache","source":"\u003ca href=\"http:\/\/twitter.com\/download\/iphone\" rel=\"nofollow\"\u003eTwitter for iPhone\u003c\/a\u003e","truncated":false,"in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":42353977,"in_reply_to_user_id_str":"42353977","in_reply_to_screen_name":"KayKay121","user":{"id":317846866,"id_str":"317846866","name":"BaddieWinkleIsBae","screen_name":"WhoIsPetlo","location":"Polokwane | Grahamstown ","url":null,"description":"Extrovert","protected":false,"verified":false,"followers_count":767,"friends_count":393,"listed_count":0,"favourites_count":891,"statuses_count":41162,"created_at":"Wed Jun 15 15:31:30 +0000 2011","utc_offset":-10800,"time_zone":"Greenland","geo_enabled":true,"lang":"en","contributors_enabled":false,"is_translator":false,"profile_background_color":"C0DEED","profile_background_image_url":"http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_image_url_https":"https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_tile":false,"profile_link_color":"0084B4","profile_sidebar_border_color":"C0DEED","profile_sidebar_fill_color":"DDEEF6","profile_text_color":"333333","profile_use_background_image":true,"profile_image_url":"http:\/\/pbs.twimg.com\/profile_images\/659384066798694401\/Ogdtb4HJ_normal.jpg","profile_image_url_https":"https:\/\/pbs.twimg.com\/profile_images\/659384066798694401\/Ogdtb4HJ_normal.jpg","profile_banner_url":"https:\/\/pbs.twimg.com\/profile_banners\/317846866\/1443969906","default_profile":true,"default_profile_image":false,"following":null,"follow_request_sent":null,"notifications":null},"geo":null,"coordinates":null,"place":{"id":"59efa64f5c8f5340","url":"https:\/\/api.twitter.com\/1.1\/geo\/id\/59efa64f5c8f5340.json","place_type":"city","name":"Grahamstown","full_name":"Grahamstown, South Africa","country_code":"ZA","country":"South Africa","bounding_box":{"type":"Polygon","coordinates":[[[26.479477,-33.326355],[26.479477,-33.270332],[26.560003,-33.270332],[26.560003,-33.326355]]]},"attributes":{}},"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,"entities":{"hashtags":[],"urls":[],"user_mentions":[{"screen_name":"KayKay121","name":"KK_Rakitla95","id":42353977,"id_str":"42353977","indices":[0,10]}],"symbols":[],"media":[{"id":659789679491858432,"id_str":"659789679491858432","indices":[68,91],"media_url":"http:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","media_url_https":"https:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","url":"https:\/\/t.co\/HjZR3d5QaQ","display_url":"pic.twitter.com\/HjZR3d5QaQ","expanded_url":"http:\/\/twitter.com\/WhoIsPetlo\/status\/659789756637822976\/photo\/1","type":"photo","sizes":{"thumb":{"w":150,"h":150,"resize":"crop"},"small":{"w":300,"h":300,"resize":"fit"},"large":{"w":300,"h":300,"resize":"fit"},"medium":{"w":300,"h":300,"resize":"fit"}}}]},"extended_entities":{"media":[{"id":659789679491858432,"id_str":"659789679491858432","indices":[68,91],"media_url":"http:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","media_url_https":"https:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","url":"https:\/\/t.co\/HjZR3d5QaQ","display_url":"pic.twitter.com\/HjZR3d5QaQ","expanded_url":"http:\/\/twitter.com\/WhoIsPetlo\/status\/659789756637822976\/photo\/1","type":"animated_gif","sizes":{"thumb":{"w":150,"h":150,"resize":"crop"},"small":{"w":300,"h":300,"resize":"fit"},"large":{"w":300,"h":300,"resize":"fit"},"medium":{"w":300,"h":300,"resize":"fit"}},"video_info":{"aspect_ratio":[1,1],"variants":[{"bitrate":0,"content_type":"video\/mp4","url":"https:\/\/pbs.twimg.com\/tweet_video\/CSgLN8CUwAAzgez.mp4"}]}}]},"favorited":false,"retweeted":false,"possibly_sensitive":false,"filter_level":"low","lang":"en","timestamp_ms":"1446141110940"}
+{"created_at":"Thu Oct 29 17:51:01 +0000 2015","id":659789756637822976,"id_str":"659789756637822976","text":"Spark Summit East this week! #Spark #Apache","source":"\u003ca href=\"http:\/\/twitter.com\/download\/iphone\" rel=\"nofollow\"\u003eTwitter for iPhone\u003c\/a\u003e","truncated":false,"in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":42353977,"in_reply_to_user_id_str":"42353977","in_reply_to_screen_name":"KayKay121","user":{"id":317846866,"id_str":"317846866","name":"BaddieWinkleIsBae","screen_name":"WhoIsPetlo","location":"Polokwane | Grahamstown ","url":null,"description":"Extrovert","protected":false,"verified":false,"followers_count":767,"friends_count":393,"listed_count":0,"favourites_count":891,"statuses_count":41162,"created_at":"Wed Jun 15 15:31:30 +0000 2011","utc_offset":-10800,"time_zone":"Greenland","geo_enabled":true,"lang":"en","contributors_enabled":false,"is_translator":false,"profile_background_color":"C0DEED","profile_background_image_url":"http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_image_url_https":"https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_tile":false,"profile_link_color":"0084B4","profile_sidebar_border_color":"C0DEED","profile_sidebar_fill_color":"DDEEF6","profile_text_color":"333333","profile_use_background_image":true,"profile_image_url":"http:\/\/pbs.twimg.com\/profile_images\/659384066798694401\/Ogdtb4HJ_normal.jpg","profile_image_url_https":"https:\/\/pbs.twimg.com\/profile_images\/659384066798694401\/Ogdtb4HJ_normal.jpg","profile_banner_url":"https:\/\/pbs.twimg.com\/profile_banners\/317846866\/1443969906","default_profile":true,"default_profile_image":false,"following":null,"follow_request_sent":null,"notifications":null},"geo":null,"coordinates":null,"place":{"id":"59efa64f5c8f5340","url":"https:\/\/api.twitter.com\/1.1\/geo\/id\/59efa64f5c8f5340.json","place_type":"city","name":"Grahamstown","full_name":"Grahamstown, South Africa","country_code":"ZA","country":"South Africa","bounding_box":{"type":"Polygon","coordinates":[[[26.479477,-33.326355],[26.479477,-33.270332],[26.560003,-33.270332],[26.560003,-33.326355]]]},"attributes":{}},"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,"entities":{"hashtags":[{"text":"Spark","indices":[29,35]},{"text":"Apache","indices":[36,43]}],"urls":[],"user_mentions":[{"screen_name":"KayKay121","name":"KK_Rakitla95","id":42353977,"id_str":"42353977","indices":[0,10]}],"symbols":[],"media":[{"id":659789679491858432,"id_str":"659789679491858432","indices":[68,91],"media_url":"http:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","media_url_https":"https:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","url":"https:\/\/t.co\/HjZR3d5QaQ","display_url":"pic.twitter.com\/HjZR3d5QaQ","expanded_url":"http:\/\/twitter.com\/WhoIsPetlo\/status\/659789756637822976\/photo\/1","type":"photo","sizes":{"thumb":{"w":150,"h":150,"resize":"crop"},"small":{"w":300,"h":300,"resize":"fit"},"large":{"w":300,"h":300,"resize":"fit"},"medium":{"w":300,"h":300,"resize":"fit"}}}]},"extended_entities":{"media":[{"id":659789679491858432,"id_str":"659789679491858432","indices":[68,91],"media_url":"http:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","media_url_https":"https:\/\/pbs.twimg.com\/tweet_video_thumb\/CSgLN8CUwAAzgez.png","url":"https:\/\/t.co\/HjZR3d5QaQ","display_url":"pic.twitter.com\/HjZR3d5QaQ","expanded_url":"http:\/\/twitter.com\/WhoIsPetlo\/status\/659789756637822976\/photo\/1","type":"animated_gif","sizes":{"thumb":{"w":150,"h":150,"resize":"crop"},"small":{"w":300,"h":300,"resize":"fit"},"large":{"w":300,"h":300,"resize":"fit"},"medium":{"w":300,"h":300,"resize":"fit"}},"video_info":{"aspect_ratio":[1,1],"variants":[{"bitrate":0,"content_type":"video\/mp4","url":"https:\/\/pbs.twimg.com\/tweet_video\/CSgLN8CUwAAzgez.mp4"}]}}]},"favorited":false,"retweeted":false,"possibly_sensitive":false,"filter_level":"low","lang":"en","timestamp_ms":"1446141110940"}
 {"created_at":"Thu Oct 29 18:10:49 +0000 2015","id":659794531844509700,"id_str":"659794531844509700","text":"I'm at Terminal de Integra\u00e7\u00e3o do Varadouro in Jo\u00e3o Pessoa, PB https:\/\/t.co\/HOl34REL1a","source":"\u003ca href=\"http:\/\/foursquare.com\" rel=\"nofollow\"\u003eFoursquare\u003c\/a\u003e","truncated":false,"in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"user":{"id":60196177,"id_str":"60196177","name":"Jo\u00e3o Cassimiro","screen_name":"Jcassimironeto","location":"Paraiba","url":"http:\/\/www.facebook.com\/profile.php?id=1818814650","description":"jcassimironeto","protected":false,"verified":false,"followers_count":240,"friends_count":654,"listed_count":0,"favourites_count":26,"statuses_count":2065,"created_at":"Sun Jul 26 01:15:03 +0000 2009","utc_offset":-7200,"time_zone":"Brasilia","geo_enabled":true,"lang":"pt","contributors_enabled":false,"is_translator":false,"profile_background_color":"022330","profile_background_image_url":"http:\/\/pbs.twimg.com\/profile_background_images\/671814600\/1028c894ede2eb444ebfd12f94f6cb93.jpeg","profile_background_image_url_https":"https:\/\/pbs.twimg.com\/profile_background_images\/671814600\/1028c894ede2eb444ebfd12f94f6cb93.jpeg","profile_background_tile":true,"profile_link_color":"0084B4","profile_sidebar_border_color":"FFFFFF","profile_sidebar_fill_color":"C0DFEC","profile_text_color":"333333","profile_use_background_image":true,"profile_image_url":"http:\/\/pbs.twimg.com\/profile_images\/618238977565433856\/YM1aKFZj_normal.jpg","profile_image_url_https":"https:\/\/pbs.twimg.com\/profile_images\/618238977565433856\/YM1aKFZj_normal.jpg","profile_banner_url":"https:\/\/pbs.twimg.com\/profile_banners\/60196177\/1395970110","default_profile":false,"default_profile_image":false,"following":null,"follow_request_sent":null,"notifications":null},"geo":{"type":"Point","coordinates":[-7.11792683,-34.88985837]},"coordinates":{"type":"Point","coordinates":[-34.88985837,-7.11792683]},"place":{"id":"c9f2f46c0d1b963d","url":"https:\/\/api.twitter.com\/1.1\/geo\/id\/c9f2f46c0d1b963d.json","place_type":"city","name":"Jo\u00e3o Pessoa","full_name":"Jo\u00e3o Pessoa, Para\u00edba","country_code":"BR","country":"Brasil","bounding_box":{"type":"Polygon","coordinates":[[[-34.971299,-7.243257],[-34.971299,-7.055696],[-34.792907,-7.055696],[-34.792907,-7.243257]]]},"attributes":{}},"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,"entities":{"hashtags":[],"urls":[{"url":"https:\/\/t.co\/HOl34REL1a","expanded_url":"https:\/\/www.swarmapp.com\/c\/2tATygSTvBu","display_url":"swarmapp.com\/c\/2tATygSTvBu","indices":[62,85]}],"user_mentions":[],"symbols":[]},"favorited":false,"retweeted":false,"possibly_sensitive":false,"filter_level":"low","lang":"pt","timestamp_ms":"1446142249438"}
 ```
 
@@ -123,7 +123,7 @@ I'm at Terminal de Integrao do Varadouro in Joo Pessoa, PB https://t.co/HOl34REL
 
 ## Second Feature
 The second feature will continually update the Twitter hashtag graph and hence, the average degree of the graph. The graph should just be built using tweets that arrived in the last 60 seconds as compared to the timestamp of the latest tweet. As new tweets come in, edges formed with tweets older than 60 seconds from the timstamp of the latest tweet should be evicted. For each incoming tweet, only extract the following fields in the JSON response
-* "hastags" - hashtags found in the tweet
+* "hashtags" - hashtags found in the tweet
 * "created_at" - timestamp of the tweet
 
 ### Building the Twitter Hashtag Graph
@@ -182,7 +182,7 @@ The average degree for simplicity will be calculated by summing the degrees of a
 
 Average Degree = (1+2+3+2+2)/5 = 2.00
 
-The rolling average degree is now 
+The rolling average degree since the 4th tweet is now 
 ```
 2.00
 ```
@@ -223,7 +223,7 @@ The average degree will be recalculated using the same formula as before.
 
 Average Degree = (1+3+1+3+2+2)/6 = 2.00
 
-The rolling average degree is now 
+The rolling average degree since the 4th tweet is now 
 ```
 2.00
 2.00
@@ -245,7 +245,7 @@ New and improved #HBase connector for #Spark (timestamp: Thu Oct 29 17:51:59 +00
 New 2.7.1 version update for #Hadoop #Apache (timestamp: Thu Oct 29 17:52:05 +0000 2015)
 ```
 
-We can see that the very first tweet has a timestamp that is more than 60 seconds behind this new tweet. This means that we do not want to include this tweet in our average degree calculation.
+We can see that the very first tweet has a timestamp that is more than 60 seconds behind this new tweet. This means that we do not want to include our first tweet in our average degree calculation.
 
 The new hashtags to be used are as follows
 ```
@@ -283,7 +283,7 @@ Average Degree = (1+2+1+2+2+2)/6 = 1.67
 
 Normally the average degree is calculated for a single graph, but maintaining multiple graphs for this problem can be quite difficult. For simplicity we are only interested in calculating the average degree of of all the nodes in all graphs despite them being disconnected.
 
-The rolling average degree is now 
+The rolling average degree since the 4th tweet is now 
 ```
 2.00
 2.00
@@ -365,13 +365,49 @@ In order to be tested correctly, you must use the format described above.  We wi
 The precision of the average should be two digits after the decimal place (i.e. rounded to the nearest hundredths place).  
 
 * *Do I need to account for complicated Unicode characters by replacing them?*  
-No, you simply need to remove them and track how many tweets require this removal.  
+No, you simply need to remove them and track how many tweets require this removal.  However, you should replace the non-Unicode escape characters.  
+
+* *What specific class of Unicode should we remove?*  
+You should leave all ASCII Unicode characters in the "Basic Latin" category (ranging from 0x0020-0x007F or 32-127 in decimal) and remove all other Unicode.  
+
+* *Should I remove the escape characters or replace them with relevant characters?*  
+You should replace the escape characters as follows:  
+```  
+\/ -> /
+\\ -> \
+\' -> '
+\” -> “
+\n -> space
+\t -> space
+```                                                                                                            
+&nbsp;&nbsp;&nbsp;&nbsp;Also, all whitespace escape characters should be replaced with a single space. 
+
+* *Can tweets in the tweets.txt file be out of order?*           						    
+No, for simplicity you can assume that the incoming tweets are in order. Although tweets from Twitter API may be out of order sometimes, the testing suite will test your code with all the tweets in order.
+
+* *Will the JSON input for the second feature contain the hashtag entity, or do I have to extract it from the text?*                                       
+You may use the hashtags directly from the entity field of the JSON, or you may extract it from the text.  In either case, you will need to make the hashtags have been "cleaned" as described in feature 1.  
+
+* *Can hashtags contain unicode characters and how should these be handled?*                                       
+Yes, hashtags can contain unicode characters. You should clean hashtags in feature 2 the same way you clean a tweet in feature 1.
+
+* *Do I need to account for empty tweets?*  
+No, for simplicity you may assume that all the tweets contain at least one word.  However, many tweets contain only unicode chracters, which will be effectively empty after you clean them.  This means you will have to test properly when implementing the second feature on real data.   
+
+* *Do I need to account for JSON messages that looks like {"limit": {"track":5,"timestamp_ms":"1446218985743"} }, which appear in the example from the data generator?*  
+No, these are simply artifacts from the Twitter API that result from the rate-limit.  Our testing suite will not contain these messages, and they can be ignored.   
+
+* *Should my graph from feature 2 contain disconnected nodes?*                                       
+No, the graph should only contain connected nodes, and this also means that you may need to remove nodes if they are no longer connected in the last 60 seconds.  
 
 * *Should I check if the files in the input directory are text files or non-text files(binary)?*  
 No, for simplicity you may assume that all of the files in the input directory are standard text files.  
 
-* *Do I need to account for empty tweets?*  
-No, for simplicity you may assume that all the tweets contain at least one word.  However, many tweets contain only unicode chracters, which will be effectively empty after you clean them.  This means you will have to test properly when implementing the second feature on real data.   
+* *What should the average be if the graph has no connections (e.g. if the first tweet doesn't have at least two hashtags)?*  
+If there are no connections for the entire graph, then you can count the average as 0.  
+
+* *Should I count self connections if a hashtag appears multiple times in a tweet?*  
+No, for simplicity you should not count connection from a node to itself.  
 
 * *Do I need separate programs for different features?*  
 You may use a single combined program or several programs, as long as they are all executed by the `run.sh` script.
@@ -387,4 +423,3 @@ Generally, we will evaluate your coding challenge with a testing suite that prov
 
 * *How long will it take for me to hear back from you about my submission?*  
 We receive hundreds of submissions and try to evaluate them all in a timely manner.  We try to get back to all applicants within two or three weeks of submission, but if you have a specific deadline that requires expedited review, you may email us at cc@insightdataengineering.com.  
-
