@@ -18,7 +18,7 @@ tweets_series = [
     },
     {
         'text': 'Excellent post on #Flink and #Spark',
-         'created_at': 'Thu Oct 29 17:51:56 +0000 2015',
+         'created_at': 'Thu Oct 29 17:51:57 +0000 2015',
     },
     {
         'text': 'New and improved #HBase connector for #Spark',
@@ -70,3 +70,9 @@ class TestGraphDegree(unittest.TestCase):
         tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:6]]
         graph = self.get_graph_from_tweets(tweets)
         self.assert_graph_degree(graph, 10.0, 6.0)
+
+    def test_remove_multiple_tweets_from_window(self):
+        tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:5]]
+        tweets += [Tweet('New version #Hadoop #Apache', 'Thu Oct 29 17:52:57 +0000 2015')]
+        graph = self.get_graph_from_tweets(tweets)
+        self.assert_graph_degree(graph, 6.0, 5.0)

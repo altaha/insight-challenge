@@ -66,19 +66,19 @@ class TestTweetSanitizer(unittest.TestCase):
 
 class TestTweet(unittest.TestCase):
     def test_name(self):
-        tweet = Tweet('Hello', '123')
-        expected = 'Hello (timestamp: 123)'
+        tweet = Tweet('Hello', 'Thu Oct 30 18:10:49 +0000 2015')
+        expected = 'Hello (timestamp: Thu Oct 30 18:10:49 +0000 2015)'
         self.assertEqual(expected, str(tweet))
 
     def test_one_edge(self):
-        tweet = Tweet('Hello #Abra #Kadabra', '123')
+        tweet = Tweet('Hello #Abra #Kadabra', 'Thu Oct 30 18:10:49 +0000 2015')
         expected_edges = ['#abra-#kadabra']
         edges = tweet.get_edges()
         self.assertEqual(len(expected_edges), len(edges))
         self.assertEqual(expected_edges[0], str(edges[0]))
 
     def test_many_edges(self):
-        tweet = Tweet('Hello #One #two #THREE', '123')
+        tweet = Tweet('Hello #One #two #THREE', 'Thu Oct 30 18:10:49 +0000 2015')
         expected_edges = ['#one-#two', '#one-#three', '#three-#two']
         edges = tweet.get_edges()
         self.assertEqual(len(expected_edges), len(edges))
@@ -86,11 +86,11 @@ class TestTweet(unittest.TestCase):
             self.assertIn(str(edge), expected_edges)
 
     def test_edges_for_duplicate_hashtags(self):
-        tweet = Tweet('Hello #A #a', '123')
+        tweet = Tweet('Hello #A #a', 'Thu Oct 30 18:10:49 +0000 2015')
         expected_edges = []
         self.assertEqual(expected_edges, tweet.get_edges())
 
     def test_edges_for_no_hashtags(self):
-        tweet = Tweet('Hello No hash', '123')
+        tweet = Tweet('Hello No hash', 'Thu Oct 30 18:10:49 +0000 2015')
         expected_edges = []
         self.assertEqual(expected_edges, tweet.get_edges())
