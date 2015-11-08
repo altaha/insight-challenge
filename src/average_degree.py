@@ -1,7 +1,7 @@
 import getopt
 import sys
 
-from sanitize_tweets import TweetSanitizer
+from tweeter import TweetGraphDegree, TweetSanitizer
 
 
 ## Feature 2 execution script ##
@@ -12,10 +12,12 @@ def write_line(line):
 
 def calculate_all_tweets(input_file):
     sanitizer = TweetSanitizer()
+    graph = TweetGraphDegree()
     with open(input_file) as tweets_in:
         for line in tweets_in:
             tweet = sanitizer.sanitize_tweet(line)
-            degree = 0
+            graph.add_tweet(tweet)
+            degree = graph.average_degree()
             write_line('{:0.2f}'.format(degree))
 
 

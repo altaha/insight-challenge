@@ -92,7 +92,15 @@ class TweetGraphDegree(object):
         self.window_size = 60
 
     def average_degree(self):
+        if len(self.node_counter) == 0:
+            return 0
         return float(self.nodes_total) / len(self.node_counter)
+
+    def total(self):
+        return self.nodes_total
+
+    def num_nodes(self):
+        return len(self.node_counter)
 
     def add_tweet(self, tweet):
         edges = tweet.get_edges()
