@@ -1,4 +1,5 @@
 import json
+from collections import deque, Counter
 
 
 class TweetSanitizer(object):
@@ -62,21 +63,48 @@ class Tweet(object):
         edges = []
         while len(hashtags) > 0:
             hash1 = hashtags.pop()
-            edges += [self._edge_name(hash1, hash2) for hash2 in hashtags]
+            edges += [Edge(hash1, hash2) for hash2 in hashtags]
         return edges
 
-    def _edge_name(self, h1, h2):
-        if h1 < h2:
-            return '{}-{}'.format(h1, h2)
+
+class Edge(object):
+    def __init__(self, hashtag1, hashtag2):
+        if hashtag1 < hashtag2:
+            self.hashtag1 = hashtag1
+            self.hashtag2 = hashtag2
         else:
-            return '{}-{}'.format(h2, h1)
+            self.hashtag1 = hashtag2
+            self.hashtag2 = hashtag1
+
+    def __str__(self):
+        return '{}-{}'.format(self.hashtag1, self.hashtag2)
+
+    def get_hashtags(self):
+        return (self.hashtag1, self.hashtag2,)
 
 
-class TweetsGraphDegree(object):
+class TweetGraphDegree(object):
     def __init__(self):
-        self.tweets = []
-        self.num_graph_nodes = 0
+        self.tweets = deque()
+        self.edge_counter = Counter()
+        self.node_counter = Counter()
         self.nodes_total = 0
+        self.window_size = 60
 
-    def average(self):
-        return float(self.nodes_total) / self.num_graph_nodes
+    def average_degree(self):
+        return float(self.nodes_total) / len(self.node_counter)
+
+    def add_tweet(self, tweet):
+        edges = tweet.get_edges()
+        for edge in edges:
+            edge_name = str(edge)
+            if self.edge_counter[edge_name] == 0:
+                self.nodes_total += 2
+            self.edge_counter[edge_name] += 1
+
+            hashtags = edge.get_hashtags()
+            for hashtag in hashtags:
+                if self.node_counter[hashtag] == 0:
+                    self.node_counter[hashtag] = 1
+
+        self.tweets.appendleft(tweet)

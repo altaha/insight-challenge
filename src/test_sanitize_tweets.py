@@ -73,7 +73,9 @@ class TestTweet(unittest.TestCase):
     def test_one_edge(self):
         tweet = Tweet('Hello #Abra #Kadabra', '123')
         expected_edges = ['#abra-#kadabra']
-        self.assertEqual(expected_edges, tweet.get_edges())
+        edges = tweet.get_edges()
+        self.assertEqual(len(expected_edges), len(edges))
+        self.assertEqual(expected_edges[0], str(edges[0]))
 
     def test_many_edges(self):
         tweet = Tweet('Hello #One #two #THREE', '123')
@@ -81,7 +83,7 @@ class TestTweet(unittest.TestCase):
         edges = tweet.get_edges()
         self.assertEqual(len(expected_edges), len(edges))
         for edge in edges:
-            self.assertIn(edge, expected_edges)
+            self.assertIn(str(edge), expected_edges)
 
     def test_edges_for_duplicate_hashtags(self):
         tweet = Tweet('Hello #A #a', '123')

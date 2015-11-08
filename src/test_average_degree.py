@@ -1,6 +1,6 @@
 import unittest
 
-from tweeter import Tweet, TweetSanitizer
+from tweeter import Tweet, TweetGraphDegree
 
 
 tweets_series = [
@@ -24,25 +24,32 @@ tweets_series = [
 
 
 class TestGraphDegree(unittest.TestCase):
-    def setUp(self):
-        self.sanitizer = TweetSanitizer()
+    def get_graph_from_tweets(self, tweets):
+        graph = TweetGraphDegree()
+        for tweet in tweets:
+            graph.add_tweet(tweet)
+        return graph
 
     def test_degree_with_only_one_edge(self):
         tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:1]]
-        expected_degree = ''
-        self.assertEqual(expected_degree, 1)
+        graph = self.get_graph_from_tweets(tweets)
+        average_degree = graph.average_degree()
+        self.assertEqual(average_degree, 1.0/1.0)
 
     def test_degree_with_two_tweets(self):
         tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:2]]
-        expected_degree = ''
-        self.assertEqual(expected_degree, 9.0/4.0)
+        graph = self.get_graph_from_tweets(tweets)
+        average_degree = graph.average_degree()
+        self.assertEqual(average_degree, 8.0/4.0)
 
     def test_tweet_with_no_edges(self):
         tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:3]]
-        expected_degree = ''
-        self.assertEqual(expected_degree, 9.0/4.0)
+        graph = self.get_graph_from_tweets(tweets)
+        average_degree = graph.average_degree()
+        self.assertEqual(average_degree, 8.0/4.0)
 
     def test_tweets_in_60s_window(self):
-        tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[1:4]]
-        expected_degree = ''
-        self.assertEqual(expected_degree, 8.0/5.0)
+        tweets = [Tweet(t['text'], t['created_at']) for t in tweets_series[0:4]]
+        graph = self.get_graph_from_tweets(tweets)
+        average_degree = graph.average_degree()
+        self.assertEqual(average_degree, 10.0/5.0)
