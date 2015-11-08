@@ -1,3 +1,12 @@
+## Solution
+
+This repository contains my solution to the challenge described below.
+The solution runs on Python 2.7, and uses standard python modules such as
+json, datetime, and collections.
+The script run.sh produces the output for the two features, and run_tests.sh
+runs unit tests.
+
+
 Insight Data Engineering - Coding Challenge
 ===========================================================
 
